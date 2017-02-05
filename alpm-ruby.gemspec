@@ -5,7 +5,7 @@ require 'alpm/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "alpm-ruby"
-  spec.version       = Alpm::VERSION
+  spec.version       = ALPM::VERSION
   spec.authors       = ["NightFeather"]
   spec.email         = ["ss900328@gmail.com"]
 
@@ -28,7 +28,10 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+  spec.extensions    = spec.files.grep(/extconf\.rb$/)
 
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake-compiler"
+  spec.add_development_dependency "pry"
 end

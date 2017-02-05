@@ -1,5 +1,3 @@
-module Alpm
-  module Ruby
+module ALPM
     VERSION = "0.1.0"
-  end
 end
