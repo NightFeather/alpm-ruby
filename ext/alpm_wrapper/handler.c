@@ -1,10 +1,13 @@
-#include "alpm_handler.h"
-#include "alpm_package.h"
+#include "handler.h"
+#include "package.h"
 
 #define ALPM_HANDLER_RUBY_GETTER(name) ( rb_define_method(cALPM_Handler, #name, alpm_handler_get_ ## name, 0 ) )
 
+/* file-visable namespace */
 VALUE cALPM_Handler;
 
+
+/* setup all things about `ALPM::Package` */
 void Init_alpm_handler(void){
 
   extern VALUE mALPM;
@@ -25,10 +28,13 @@ void Init_alpm_handler(void){
 
 RB_COMMON_ALLOC(alpm_handler)
 
+/* deallocator */
+/* Things need to be freed here: */
+/* rb_alpm_handler->handle: pointer to alpm_handle_t */
+/* rb_alpm_handler: the wrapper itself. */
 static void alpm_handler_deallocate(void* handler_ptr){
   alpm_release(((rb_alpm_handler*)handler_ptr)->handle);
-  free(((rb_alpm_handler*)handler_ptr)->last_error);
-  free(((rb_alpm_handler*)handler_ptr));
+  free(handler_ptr);
 }
 
 VALUE alpm_handler_initialize(int argc, VALUE* argv, VALUE self){
@@ -36,7 +42,10 @@ VALUE alpm_handler_initialize(int argc, VALUE* argv, VALUE self){
   VALUE root, dbpath;
   rb_alpm_handler * handler_ptr;
   alpm_handle_t * handle;
-  alpm_errno_t * handler_errno_ptr = 0;
+  alpm_errno_t * handler_errno_ptr;
+
+  handler_errno_ptr = (alpm_errno_t*)malloc(sizeof(alpm_errno_t));
+  *handler_errno_ptr = 0;
 
   rb_scan_args(argc, argv, "02", &root, &dbpath);
 
@@ -46,7 +55,6 @@ VALUE alpm_handler_initialize(int argc, VALUE* argv, VALUE self){
   Data_Get_Struct(self, rb_alpm_handler, handler_ptr);
 
   handler_ptr->handle = alpm_initialize(StringValuePtr(root),StringValuePtr(dbpath),handler_errno_ptr);
-  handler_ptr->last_error = handler_errno_ptr;
 
   return self;
 }
@@ -66,7 +74,7 @@ static VALUE alpm_handler_get_dbpath(VALUE self){
 static VALUE alpm_handler_get_last_error(VALUE self){
   rb_alpm_handler * handler_ptr = NULL;
   Data_Get_Struct(self, rb_alpm_handler, handler_ptr);
-  return INT2FIX((int)alpm_errno(handler_ptr->handle));
+  return INT2NUM((int)alpm_errno(handler_ptr->handle));
 }
 
 static VALUE alpm_handler_get_last_error_reason(VALUE self){
@@ -84,5 +92,5 @@ static VALUE alpm_handler_get_last_error_reason(VALUE self){
 static VALUE alpm_handler_get_default_siglevel(VALUE self){
   rb_alpm_handler * handler_ptr = NULL;
   Data_Get_Struct(self,rb_alpm_handler, handler_ptr);
-  return INT2FIX((int)alpm_option_get_default_siglevel(handler_ptr->handle));
+  return INT2NUM((int)alpm_option_get_default_siglevel(handler_ptr->handle));
 }

@@ -9,7 +9,6 @@
 
 typedef struct {
   alpm_handle_t * handle;
-  alpm_errno_t * last_error;
 } rb_alpm_handler;
 
 void Init_alpm_handler();
