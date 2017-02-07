@@ -18,6 +18,12 @@ extern "C" {
   return rb_str_new2( (filename != NULL) ? filename : empty_str );\
 }
 
+#define RB_PACKAGE_SIMPLE_GETTER_INTEGER(name) static VALUE alpm_package_get_ ## name(VALUE self) {\
+  rb_alpm_package * handler;\
+  Data_Get_Struct(self, rb_alpm_package, handler);\
+  return INT2NUM((int)alpm_pkg_get_ ## name(handler->handle));\
+}
+
 #define RB_PACKAGE_SIMPLE_GETTER_LONG(name) static VALUE alpm_package_get_ ## name(VALUE self) {\
   rb_alpm_package * handler;\
   Data_Get_Struct(self, rb_alpm_package, handler);\

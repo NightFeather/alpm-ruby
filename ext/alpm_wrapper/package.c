@@ -29,9 +29,12 @@ void Init_alpm_package(){
   RB_PACKAGE_GETTER_SET(builddate);
   RB_PACKAGE_GETTER_SET(installdate);
 
-/*
+  /* enums -> num / constants */
   RB_PACKAGE_GETTER_SET(origin);
   RB_PACKAGE_GETTER_SET(reason);
+  RB_PACKAGE_GETTER_SET(validation);
+
+/*
   RB_PACKAGE_GETTER_SET(licenses);
   RB_PACKAGE_GETTER_SET(groups);
   RB_PACKAGE_GETTER_SET(depends);
@@ -43,7 +46,6 @@ void Init_alpm_package(){
   RB_PACKAGE_GETTER_SET(files);
   RB_PACKAGE_GETTER_SET(backup);
   RB_PACKAGE_GETTER_SET(db);
-  RB_PACKAGE_GETTER_SET(validation);
 */
 }
 
@@ -98,3 +100,7 @@ RB_PACKAGE_SIMPLE_GETTER_LONG(isize);
 
 RB_PACKAGE_SIMPLE_GETTER_TIME(installdate);
 RB_PACKAGE_SIMPLE_GETTER_TIME(builddate);
+
+RB_PACKAGE_SIMPLE_GETTER_INTEGER(origin);
+RB_PACKAGE_SIMPLE_GETTER_INTEGER(reason);
+RB_PACKAGE_SIMPLE_GETTER_INTEGER(validation);
