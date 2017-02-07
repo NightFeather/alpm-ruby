@@ -1,0 +1,1 @@
+require 'alpm/package/constants'
