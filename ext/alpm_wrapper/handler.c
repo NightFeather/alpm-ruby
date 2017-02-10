@@ -1,8 +1,6 @@
 #include "handler.h"
 #include "package.h"
 
-#define ALPM_HANDLER_RUBY_GETTER(name) ( rb_define_method(cALPM_Handler, #name, alpm_handler_get_ ## name, 0 ) )
-
 /* file-visable namespace */
 VALUE cALPM_Handler;
 
@@ -17,11 +15,14 @@ void Init_alpm_handler(void){
   rb_define_method(cALPM_Handler, "initialize", alpm_handler_initialize, -1);
 
 
-  ALPM_HANDLER_RUBY_GETTER(root);
-  ALPM_HANDLER_RUBY_GETTER(dbpath);
-  ALPM_HANDLER_RUBY_GETTER(last_error);
-  ALPM_HANDLER_RUBY_GETTER(last_error_reason);
-  ALPM_HANDLER_RUBY_GETTER(default_siglevel);
+  RB_HANDLER_GETTER_SET(root);
+  RB_HANDLER_GETTER_SET(dbpath);
+  RB_HANDLER_GETTER_SET(lockfile);
+
+  RB_HANDLER_GETTER_SET(default_siglevel);
+
+  RB_HANDLER_GETTER_SET(last_error);
+  RB_HANDLER_GETTER_SET(last_error_reason);
 
   rb_define_method(cALPM_Handler, "load_package_file", alpm_package_load_from_file, -1);
 }
@@ -59,17 +60,11 @@ VALUE alpm_handler_initialize(int argc, VALUE* argv, VALUE self){
   return self;
 }
 
-static VALUE alpm_handler_get_root(VALUE self){
-  rb_alpm_handler * handler_ptr = NULL;
-  Data_Get_Struct(self, rb_alpm_handler, handler_ptr);
-  return rb_str_new2(alpm_option_get_root(handler_ptr->handle));
-}
+RB_HANDLER_SIMPLE_GETTER_STRING(root);
+RB_HANDLER_SIMPLE_GETTER_STRING(dbpath);
+RB_HANDLER_SIMPLE_GETTER_STRING(lockfile);
 
-static VALUE alpm_handler_get_dbpath(VALUE self){
-  rb_alpm_handler * handler_ptr = NULL;
-  Data_Get_Struct(self, rb_alpm_handler, handler_ptr);
-  return rb_str_new2(alpm_option_get_dbpath(handler_ptr->handle));
-}
+RB_HANDLER_SIMPLE_GETTER_INTEGER(default_siglevel);
 
 static VALUE alpm_handler_get_last_error(VALUE self){
   rb_alpm_handler * handler_ptr = NULL;
@@ -87,10 +82,4 @@ static VALUE alpm_handler_get_last_error_reason(VALUE self){
   } else {
     return Qnil;
   }
-}
-
-static VALUE alpm_handler_get_default_siglevel(VALUE self){
-  rb_alpm_handler * handler_ptr = NULL;
-  Data_Get_Struct(self,rb_alpm_handler, handler_ptr);
-  return INT2NUM((int)alpm_option_get_default_siglevel(handler_ptr->handle));
 }
