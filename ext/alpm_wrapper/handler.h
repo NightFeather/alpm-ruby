@@ -4,13 +4,14 @@
 #include "common.h"
 
 #define RB_HANDLER_ACCESS_NAME(name) static VALUE alpm_handler_get_ ## name(VALUE);\
-static VALUE alpm_handler_set_ ## name(VALUE)
+static VALUE alpm_handler_set_ ## name(VALUE,VALUE)
 
 #define RB_HANDLER_ACCESS_SET(name) rb_define_method(cALPM_Handler, #name, alpm_handler_get_ ## name, 0 );\
-rb_define_method(cALPM_Handler, #name, alpm_handler_set_ ## name, 0 )
+rb_define_method(cALPM_Handler, #name"=" , alpm_handler_set_ ## name, 1 )
 
 #define RB_HANDLER_GETTER_NAME(name) static VALUE alpm_handler_get_ ## name(VALUE)
 #define RB_HANDLER_GETTER_SET(name) rb_define_method(cALPM_Handler, #name, alpm_handler_get_ ## name, 0 )
+
 #define RB_HANDLER_SIMPLE_GETTER_STRING(name) static VALUE alpm_handler_get_ ## name(VALUE self) {\
   rb_alpm_handler * handler;\
   const char * empty_str = "";\
@@ -25,6 +26,13 @@ rb_define_method(cALPM_Handler, #name, alpm_handler_set_ ## name, 0 )
   return INT2NUM((int)alpm_option_get_ ## name(handler->handle));\
 }
 
+#define RB_HANDLER_SIMPLE_SETTER_STRING(name) static VALUE alpm_handler_set_ ## name(VALUE self, VALUE arg) {\
+  rb_alpm_handler * handler;\
+  Data_Get_Struct(self, rb_alpm_handler, handler);\
+  Check_Type(arg, T_STRING);\
+  alpm_option_set_ ## name(handler->handle, StringValuePtr(arg));\
+  return arg;\
+}
 
 #ifdef __cplusplus
   extern "C" {
@@ -46,10 +54,10 @@ RB_HANDLER_GETTER_NAME(dbpath);
 RB_HANDLER_GETTER_NAME(lockfile);
 
 /* capture string (rw) */
-RB_HANDLER_GETTER_NAME(logfile);
-RB_HANDLER_GETTER_NAME(gpgdir);
-RB_HANDLER_GETTER_NAME(arch);
-RB_HANDLER_GETTER_NAME(dbext);
+RB_HANDLER_ACCESS_NAME(logfile);
+RB_HANDLER_ACCESS_NAME(gpgdir);
+RB_HANDLER_ACCESS_NAME(arch);
+RB_HANDLER_ACCESS_NAME(dbext);
 
 /* capture integer (rw, actual boolean) */
 RB_HANDLER_ACCESS_NAME(checkspace);
