@@ -24,6 +24,10 @@ void Init_alpm_handler(void){
   RB_HANDLER_ACCESS_SET(arch);
   RB_HANDLER_ACCESS_SET(dbext);
 
+  RB_HANDLER_ACCESS_SET(deltaratio);
+
+  RB_HANDLER_ACCESS_SET(checkspace);
+
   RB_HANDLER_GETTER_SET(default_siglevel);
 
   RB_HANDLER_GETTER_SET(last_error);
@@ -79,7 +83,40 @@ RB_HANDLER_SIMPLE_SETTER_STRING(gpgdir);
 RB_HANDLER_SIMPLE_SETTER_STRING(arch);
 RB_HANDLER_SIMPLE_SETTER_STRING(dbext);
 
+RB_HANDLER_SIMPLE_GETTER_DOUBLE(deltaratio);
+RB_HANDLER_SIMPLE_SETTER_DOUBLE(deltaratio);
+
 RB_HANDLER_SIMPLE_GETTER_INTEGER(default_siglevel);
+
+static VALUE alpm_handler_get_checkspace(VALUE self) {
+  rb_alpm_handler * handler;
+  int result = 0;
+  Data_Get_Struct(self, rb_alpm_handler, handler);
+  result = alpm_option_get_checkspace(handler->handle);
+  return result > 0 ? Qtrue : Qfalse;
+}
+
+static VALUE alpm_handler_set_checkspace(VALUE self, VALUE arg) {
+  rb_alpm_handler * handler;
+  int result = 0;
+  Data_Get_Struct(self, rb_alpm_handler, handler);
+
+  switch(TYPE(arg)){
+    case T_TRUE:
+      result = 1;
+      break;
+    case T_FALSE:
+    case T_NIL:
+      result = 0;
+      break;
+    default:
+      rb_raise(rb_eTypeError, "Expected a boolean");
+  }
+
+  alpm_option_set_checkspace(handler->handle, result);
+  return arg;
+}
+
 
 static VALUE alpm_handler_get_last_error(VALUE self){
   rb_alpm_handler * handler_ptr = NULL;

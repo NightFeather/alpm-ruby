@@ -20,17 +20,31 @@ rb_define_method(cALPM_Handler, #name"=" , alpm_handler_set_ ## name, 1 )
   return rb_str_new2( (filename != NULL) ? filename : empty_str );\
 }
 
+#define RB_HANDLER_SIMPLE_SETTER_STRING(name) static VALUE alpm_handler_set_ ## name(VALUE self, VALUE arg) {\
+  rb_alpm_handler * handler;\
+  Data_Get_Struct(self, rb_alpm_handler, handler);\
+  Check_Type(arg, T_STRING);\
+  alpm_option_set_ ## name(handler->handle, StringValuePtr(arg));\
+  return arg;\
+}
+
 #define RB_HANDLER_SIMPLE_GETTER_INTEGER(name) static VALUE alpm_handler_get_ ## name(VALUE self) {\
   rb_alpm_handler * handler;\
   Data_Get_Struct(self, rb_alpm_handler, handler);\
   return INT2NUM((int)alpm_option_get_ ## name(handler->handle));\
 }
 
-#define RB_HANDLER_SIMPLE_SETTER_STRING(name) static VALUE alpm_handler_set_ ## name(VALUE self, VALUE arg) {\
+#define RB_HANDLER_SIMPLE_GETTER_DOUBLE(name) static VALUE alpm_handler_get_ ## name(VALUE self) {\
   rb_alpm_handler * handler;\
   Data_Get_Struct(self, rb_alpm_handler, handler);\
-  Check_Type(arg, T_STRING);\
-  alpm_option_set_ ## name(handler->handle, StringValuePtr(arg));\
+  return rb_float_new((double)alpm_option_get_ ## name(handler->handle));\
+}
+
+#define RB_HANDLER_SIMPLE_SETTER_DOUBLE(name) static VALUE alpm_handler_set_ ## name(VALUE self, VALUE arg) {\
+  rb_alpm_handler * handler;\
+  Data_Get_Struct(self, rb_alpm_handler, handler);\
+  Check_Type(arg, T_FLOAT);\
+  alpm_option_set_ ## name(handler->handle, NUM2DBL(arg));\
   return arg;\
 }
 
