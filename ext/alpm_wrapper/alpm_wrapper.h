@@ -1,5 +1,5 @@
-#ifndef _ALPM_WRAPPER_H_
-#define _ALPM_WRAPPER_H_
+#ifndef _RB_ALPM_WRAPPER_H_
+#define _RB_ALPM_WRAPPER_H_
 
 #include "common.h"
 #include "handler.h"

@@ -1,5 +1,5 @@
-#ifndef _ALPM_PACKAGE_H_
-#define _ALPM_PACKAGE_H_
+#ifndef _RB_ALPM_PACKAGE_H_
+#define _RB_ALPM_PACKAGE_H_
 
 #include "common.h"
 

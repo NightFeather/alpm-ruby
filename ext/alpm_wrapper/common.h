@@ -1,5 +1,5 @@
-#ifndef _ALPM_WRAPPER_COMMON_H_
-#define _ALPM_WRAPPER_COMMON_H_
+#ifndef _RB_ALPM_WRAPPER_COMMON_H_
+#define _RB_ALPM_WRAPPER_COMMON_H_
 
 #include <alpm.h>
 #include <ruby.h>

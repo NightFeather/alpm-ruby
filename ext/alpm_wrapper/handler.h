@@ -1,5 +1,5 @@
-#ifndef _ALPM_HANDLER_H_
-#define _ALPM_HANDLER_H_
+#ifndef _RB_ALPM_HANDLER_H_
+#define _RB_ALPM_HANDLER_H_
 
 #include "common.h"
 
